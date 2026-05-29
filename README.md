@@ -1,16 +1,147 @@
-# React + Vite
+Project uses API: https://jsonplaceholder.typicode.com/
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MUTATION Redux Toolkit RTK Query.
 
-Currently, two official plugins are available:
+const [createPost, { isLoading: isCreating, error: createError }] =
+  useCreatePostsMutation();
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+`useCreatePostsMutation()` returns an array with 2 items:
 
-## React Compiler
+[
+  mutationFunction,
+  mutationStateObject
+]
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+So internally:
 
-## Expanding the ESLint configuration
+const result = useCreatePostsMutation();
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+looks like:
+
+[
+  createPost,
+  {
+    isLoading,
+    error,
+    data,
+    isSuccess
+  }
+]
+
+---
+
+# First item
+
+createPost
+
+This is the mutation function used to call API.
+
+Example:
+
+createPost({
+  title: "React",
+  body: "Learning RTK Query"
+});
+
+It sends POST request.
+
+---
+
+# Second item
+
+{
+  isLoading: isCreating,
+  error: createError
+}
+
+This is object destructuring.
+
+RTK Query provides mutation states:
+
+{
+  isLoading,
+  error,
+  data,
+  isSuccess,
+  isError
+}
+
+You renamed them:
+
+isLoading: isCreating
+
+means:
+
+Take isLoading
+Rename it to isCreating
+
+Similarly:
+
+error: createError
+
+means:
+
+Take error
+Rename it to createError
+
+---
+
+Equivalent normal JavaScript:
+
+const mutationResult = useCreatePostsMutation();
+
+const createPost = mutationResult[0];
+
+const isCreating = mutationResult[1].isLoading;
+
+const createError = mutationResult[1].error;
+
+---
+
+# Why rename variables?
+
+Because multiple mutations may exist.
+
+Without renaming:
+
+const [createPost, { isLoading }] =
+  useCreatePostsMutation();
+
+const [updatePost, { isLoading }] =
+  useUpdatePostMutation();
+
+This causes duplicate variable error.
+
+So rename:
+
+```js id="y4m7qv"
+isLoading: isCreating
+isLoading: isUpdating
+```
+
+Cleaner and avoids conflicts.
+
+---
+
+# Typical usage
+
+<button
+  onClick={handleCreate}
+  disabled={isCreating}
+>
+  {
+    isCreating
+      ? "Creating..."
+      : "Create Post"
+  }
+</button>
+
+Error handling:
+
+{
+  createError && (
+    <p>{createError.message}</p>
+  )
+}
+
+This is the standard RTK Query mutation pattern.
