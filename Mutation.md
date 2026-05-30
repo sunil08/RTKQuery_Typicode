@@ -1,8 +1,4 @@
-Project uses API: https://jsonplaceholder.typicode.com/
-
-Youtube Video: https://www.youtube.com/watch?v=sKJU5_3Vx0A
-
-Mutation Query.
+This code is from Redux Toolkit RTK Query.
 
 ```js id="n4q8tx"
 const [createPost, { isLoading: isCreating, error: createError }] =
@@ -70,7 +66,7 @@ It sends POST request.
 }
 ```
 
-This is object destructuring or can say Alias
+This is object destructuring.
 
 RTK Query provides mutation states:
 
